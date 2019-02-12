@@ -76,8 +76,9 @@ def add_example(text, path):
     add_path(n, path)
 
 
-for file_name, content in data.items():
-    add_example(content, 'yolo')
+for directory, files_content in data.items():
+    for content in files_content:
+        add_example(content, directory)
 
 
 if __name__ == '__main__':

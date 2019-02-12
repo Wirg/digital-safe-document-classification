@@ -18,17 +18,17 @@ FILE_READERS = {
 }
 
 
-def get_file_type(file):
-    _, extension = splitext(file.lower())
-    for extension_type, extensions in EXTENSION_ALIASES:
-        if extension in extensions:
+def get_file_type(filename):
+    _, extension = os.path.splitext(filename.lower())
+    for extension_type, extensions in EXTENSION_ALIASES.items():
+        if extension[1:] in extensions:
             return extension_type
 
-    raise ConvertFileException(f'Unknown file extension {extension} for file {file}')
+    raise ConvertFileException(f'Unknown file extension {extension} for file {filename}')
 
 
 def read_file(file):
-    file_type = get_file_type(file)
+    file_type = get_file_type(file.filename)
 
     if file_type not in FILE_READERS:
         raise ConvertFileException(f'No text converter for file_type {file_type}')
