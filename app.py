@@ -2,7 +2,7 @@ from flask import Flask, url_for, request
 from flask_cors import CORS
 from flask_restplus import Api, Resource, reqparse
 from classifier import find, add_path
-from convert_file_to_text import read_file
+from services.convert_file_to_text import read_file
 
 
 def default_doc():
