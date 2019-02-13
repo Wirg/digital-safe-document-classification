@@ -69,12 +69,25 @@ function handleFiles(files) {
 }
 
 function previewFile(file) {
+    let img_src = 'file.ico'
+    switch (file.name.split('.').pop().toLowerCase()) {
+        case 'text':
+        case 'txt':
+        case 'md':
+            img_src = 'txt.ico'
+            break
+        case 'pdf':
+            img_src = 'pdf.ico'
+            break
+    }
     let reader = new FileReader()
     console.debug('preview')
     reader.readAsDataURL(file)
-    reader.onloadend = function () {
+    reader.onloadend = () => {
         let img = document.createElement('img')
-        img.src = reader.result
+        img.src = 'assets/' + img_src
+        img.style.height = '30px'
+        img.style.width = '30px'
         document.getElementById('gallery').appendChild(img)
         console.debug('load end')
     }
