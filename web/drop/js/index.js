@@ -165,7 +165,6 @@ function uploadFile(file, i) {
                 folderInputs.removeChild(folderInputs.firstChild);
             }
             resp['paths'].filter((value, index, array) => array.indexOf(value) === index).forEach(function (path) {
-                // <input type="radio" name="reason" value="">Other <input type="text" name="other_reason"/>
                 folderInputs.appendChild(radioButton(path))
             })
 
@@ -173,9 +172,7 @@ function uploadFile(file, i) {
             input.type = "text"
             input.default = "Enter a new folder name"
             folderInputs.appendChild(radioButton('new_path', input))
-        }
-
-        else if (xhr.readyState === 4 && xhr.status !== 200) {
+        } else if (xhr.readyState === 4 && xhr.status !== 200) {
             alert('that did not work')
         }
     })
