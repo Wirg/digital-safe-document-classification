@@ -16,7 +16,8 @@
 <div id="drop-area">
     <form class="my-form">
         <p>Upload multiple files with the file dialog or by dragging and dropping images onto the dashed region</p>
-        <input type="file" id="fileElem" multiple accept="image/*,.md,.txt,.pdf,.csv" onchange="handleFiles(this.files)">
+        <input type="file" id="fileElem" multiple accept="image/*,.md,.txt,.pdf,.csv"
+               onchange="handleFiles(this.files)">
         <label class="button" for="fileElem">Select some files</label>
     </form>
     <progress id="progress-bar" max=100 value=0></progress>
@@ -34,9 +35,10 @@
             <p>
                 Which folder do you want to choose?
             </p>
-            <div id="folder-inputs">
+            <div id="folder-inputs"></div>
 
-            </div>
+
+            <input type="submit" value="Submit">
         </form>
     </div>
 

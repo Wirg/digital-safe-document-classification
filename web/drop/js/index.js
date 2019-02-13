@@ -110,16 +110,18 @@ window.onclick = function (event) {
     }
 }
 
-function radioButton(path, innerHTML) {
-    innerHTML = innerHTML || path
+function radioButton(path, content) {
+    var text = document.createElement('span')
+    text.innerText = path
+    content = content || text
     var input = document.createElement('input')
     var label = document.createElement('label')
     var div = document.createElement('div')
     input.setAttribute('type', 'radio')
-    input.setAttribute('name', path)
+    input.setAttribute('name', 'folder_choice')
     input.setAttribute('value', path)
     label.setAttribute("for", path)
-    label.innerHTML = innerHTML
+    label.appendChild(content)
     div.appendChild(input)
     div.appendChild(label)
     return div
@@ -167,7 +169,10 @@ function uploadFile(file, i) {
                 folderInputs.appendChild(radioButton(path))
             })
 
-
+            let input = document.createElement('input')
+            input.type = "text"
+            input.default = "Enter a new folder name"
+            folderInputs.appendChild(radioButton('new_path', input))
         }
 
         else if (xhr.readyState === 4 && xhr.status !== 200) {
