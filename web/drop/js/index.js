@@ -29,7 +29,7 @@ function highlight(e) {
 }
 
 function unhighlight(e) {
-    dropArea.classList.remove('active')
+    dropArea.classList.remove('highlight')
 }
 
 function handleDrop(e) {

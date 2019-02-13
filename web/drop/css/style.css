@@ -12,8 +12,8 @@ a {
   text-align: justify;
 }
 #drop-area {
-  border: 2px dashed #ccc;
-  border-radius: 20px;
+  border: 2px solid #ccc;
+  border-radius: 5px;
   width: 480px;
   margin: 50px auto;
   padding: 20px;
