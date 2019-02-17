@@ -1,4 +1,5 @@
 from flask import Flask, request
+from flask_cors import CORS
 from flask_restplus import Api, Resource, reqparse
 from classifier import find, add_path
 from services.convert_file_to_text import read_file
@@ -14,6 +15,7 @@ def default_doc():
 
 
 app = Flask(__name__, static_url_path='/app', static_folder='web/drop')
+CORS(app)
 
 api = Api(
     app,
