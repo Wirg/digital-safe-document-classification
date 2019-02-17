@@ -1,7 +1,5 @@
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.neighbors import NearestNeighbors
-from nltk.stem.snowball import SnowballStemmer
-from nltk.tokenize import casual_tokenize
 from tqdm import tqdm
 import re
 import numpy as np
@@ -9,27 +7,7 @@ import numpy as np
 from data.text_telegram import messages
 from data.downloaded_pdf import data
 
-stemmer = SnowballStemmer('french')
-
-def stem_words(text):
-    return ' '.join(stemmer.stem(token) for token in casual_tokenize(text))
-
-def shorten_word(word):
-    def short(text, token):
-        if len(text) > 4:
-            return '&' + token + str(len(text))
-        else:
-            return token * len(text)
-
-    undigitalized = re.sub(r'\d+', lambda m: short(m.group(0), 'D'), word)
-    unletterize = re.sub(r'[a-z]+', lambda m: short(m.group(0), 'L'), undigitalized)
-    return unletterize
-
-def clean_long_words(text):
-    return re.sub(r'\w{10,}', lambda m: shorten_word(m.group(0)), text)
-
 def preprocess(text: str) -> str:
-    # return text.lower()
     return re.sub(r'\d', 'D', text.lower())
 
 
@@ -79,9 +57,3 @@ def add_example(text, path):
 for directory, files_content in data.items():
     for content in files_content:
         add_example(content, directory)
-
-
-if __name__ == '__main__':
-    text = 'Bonjour, je m\'appelle Arnault 423564j5637k543h254636765'
-    print(stem_words(text))
-    print(find(text))
