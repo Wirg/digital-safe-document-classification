@@ -11,12 +11,13 @@ def preprocess(text: str) -> str:
     return re.sub(r'\d', 'D', text.lower())
 
 
-messages = list(set([text.lower() for text in messages]))
+def train_vectorizer(training_documents):
+    print('number of messages:', len(training_documents))
+    vectorizer = TfidfVectorizer(max_df=0.6, min_df=2, max_features=3000, preprocessor=preprocess)
+    vectors = vectorizer.fit_transform(tqdm(training_documents))
+    return vectorizer, vectors
 
-print('number of messages:', len(messages))
-
-vectorizer = TfidfVectorizer(max_df=0.6, min_df=2, max_features=3000)
-vectors = vectorizer.fit_transform(tqdm((preprocess(message) for message in messages), total=len(messages)))
+vectorizer, vectors = train_vectorizer(messages)
 print('tfidf done')
 nearest_neighbors = NearestNeighbors()
 nearest_neighbors.fit(vectors)
@@ -26,7 +27,7 @@ paths = dict()
 print('knn done')
 
 def vectorize(text):
-    return vectorizer.transform([preprocess(text)])
+    return vectorizer.transform([text])
 
 def find(text):
     vector = vectorize(text)
