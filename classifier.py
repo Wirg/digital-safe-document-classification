@@ -6,6 +6,7 @@ import numpy as np
 from data.text_telegram import messages
 from data.downloaded_pdf import data
 
+
 def preprocess(text: str) -> str:
     return re.sub(r'\d', 'D', text.lower())
 
@@ -16,14 +17,17 @@ def train_vectorizer(training_documents):
     vectors = vectorizer.fit_transform(tqdm(training_documents))
     return vectorizer, vectors
 
+
 vectorizer, vectors = train_vectorizer(messages)
 print('training done')
 classified = np.zeros(vectors.shape)
 paths = dict()
 print('knn done')
 
+
 def vectorize(text):
     return vectorizer.transform([text])
+
 
 def find(text):
     vector = vectorize(text)

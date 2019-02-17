@@ -1,5 +1,4 @@
-from flask import Flask, url_for, request
-from flask_cors import CORS
+from flask import Flask, request
 from flask_restplus import Api, Resource, reqparse
 from classifier import find, add_path
 from services.convert_file_to_text import read_file
@@ -14,25 +13,9 @@ def default_doc():
         }}
 
 
-class CustomApi(Api):
-    """
-    Fixes The Reverse proxy issue where swagger.json doesn't show up correctly
-    """
-
-    @property
-    def specs_url(self):
-        """
-        The Swagger specifications absolute url (ie. `swagger.json`)
-
-        :rtype: str
-        """
-        return url_for(self.endpoint('specs'), _external=False)
-
-
 app = Flask(__name__, static_url_path='/app', static_folder='web/drop')
-CORS(app)
 
-api = CustomApi(
+api = Api(
     app,
     version='1.0',
     title='Our awesome api',
