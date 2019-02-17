@@ -1,5 +1,4 @@
 from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.neighbors import NearestNeighbors
 from tqdm import tqdm
 import re
 import numpy as np
@@ -19,9 +18,6 @@ def train_vectorizer(training_documents):
 
 vectorizer, vectors = train_vectorizer(messages)
 print('training done')
-nearest_neighbors = NearestNeighbors()
-nearest_neighbors.fit(vectors)
-print(vectors.shape)
 classified = np.zeros(vectors.shape)
 paths = dict()
 print('knn done')
