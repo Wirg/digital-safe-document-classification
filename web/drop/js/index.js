@@ -154,11 +154,6 @@ function uploadFile(file, i) {
             strong.innerText = text.charAt(0).toUpperCase() + text.slice(1, 400) + '...'
             p.appendChild(strong)
             note.appendChild(p)
-            resp['found'].forEach(function (text, i) {
-                var p = document.createElement("p")
-                p.innerText = '- [' + resp['score'][i].toString().slice(0, 5) + '] ' + text.charAt(0).toUpperCase() + text.slice(1, 400) + '...'
-                note.appendChild(p)
-            })
             modal.style.display = "block";
             var folderInputs = document.getElementById('folder-inputs')
             while (folderInputs.firstChild) {

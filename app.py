@@ -53,9 +53,10 @@ class OurResource(Resource):
         arguments = classification_parser.parse_args()
         if arguments['text'] is None:
             return {'error': 'missing text'}, 503
-        text = arguments['text']
-        texts, scores = find(text)
-        return {'text': text, 'found': texts, 'score': scores}, 200
+        content = arguments['text']
+
+        paths, i = find(content)
+        return {'input': content, 'paths': paths, 'id': i}, 200
 
 
 @api_ns.route('/file')
@@ -69,8 +70,8 @@ class FileResource(Resource):
 
         content = read_file(file)
 
-        texts, scores, paths, i = find(content)
-        return {'found': texts, 'score': scores, 'input': content, 'paths': paths, 'id': i}, 200
+        paths, i = find(content)
+        return {'input': content, 'paths': paths, 'id': i}, 200
 
 
 add_path_parser = reqparse.RequestParser()

@@ -18,7 +18,7 @@ def train_vectorizer(training_documents):
     return vectorizer, vectors
 
 vectorizer, vectors = train_vectorizer(messages)
-print('tfidf done')
+print('training done')
 nearest_neighbors = NearestNeighbors()
 nearest_neighbors.fit(vectors)
 print(vectors.shape)
@@ -31,11 +31,6 @@ def vectorize(text):
 
 def find(text):
     vector = vectorize(text)
-    result = nearest_neighbors.kneighbors(vector, 5)
-    scores = result[0][0]
-    into_circle = scores < 5
-    prediction = result[1][0][into_circle]
-    scores = scores[into_circle]
     classified[len(paths)] = vector.todense()
     best_paths = []
     if paths:
@@ -43,7 +38,7 @@ def find(text):
         sorted_indexes = np.linalg.norm(classified[indexes] - vector.toarray()[0], axis=1).argsort()
         best = indexes[sorted_indexes[:5]]
         best_paths = [paths[i] for i in best]
-    return [messages[i] for i in prediction], [score for score in scores], best_paths, len(paths)
+    return best_paths, len(paths)
 
 
 def add_path(n, path):
@@ -51,7 +46,7 @@ def add_path(n, path):
 
 
 def add_example(text, path):
-    messages, scores, best_paths, n = find(text)
+    _, n = find(text)
     add_path(n, path)
 
 
