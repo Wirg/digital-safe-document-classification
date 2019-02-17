@@ -14,15 +14,15 @@ def preprocess(text: str) -> str:
 def train_vectorizer(training_documents):
     print('number of messages:', len(training_documents))
     vectorizer = TfidfVectorizer(max_df=0.6, min_df=2, max_features=3000, preprocessor=preprocess)
-    vectors = vectorizer.fit_transform(tqdm(training_documents))
-    return vectorizer, vectors
+    vectorizer.fit_transform(tqdm(training_documents))
+    return vectorizer
 
 
-vectorizer, vectors = train_vectorizer(messages)
+vectorizer = train_vectorizer(messages)
 print('training done')
-classified = np.zeros(vectors.shape)
+n_features = len(vectorizer.vocabulary_)
+classified = np.zeros((1000, n_features))
 paths = dict()
-print('knn done')
 
 
 def vectorize(text):
