@@ -1,4 +1,6 @@
+import os
 from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
 from tqdm import tqdm
 import re
 import numpy as np
@@ -14,11 +16,19 @@ def preprocess(text: str) -> str:
 def train_vectorizer(training_documents):
     print('number of messages:', len(training_documents))
     vectorizer = TfidfVectorizer(max_df=0.6, min_df=2, max_features=3000, preprocessor=preprocess)
-    vectorizer.fit_transform(tqdm(training_documents))
+    vectorizer.fit_transform(tqdm(training_documents, desc='Fitting tf-idf'))
     return vectorizer
 
+import pickle as pkl
+CACHE = 'data/cached_tfidf.pkl'
+if not os.path.exists(CACHE):
+    vectorizer = train_vectorizer(messages)
+    with open(CACHE, 'wb') as f:
+        pkl.dump(vectorizer, f)
+else:
+    with open(CACHE, 'rb') as f:
+        vectorizer = pkl.load(f)
 
-vectorizer = train_vectorizer(messages)
 print('training done')
 n_features = len(vectorizer.vocabulary_)
 classified = np.zeros((0, n_features))
@@ -29,15 +39,14 @@ def vectorize(text):
     return vectorizer.transform([text])
 
 
-def find(text):
+def find(text, n=3):
     global classified
     vector = vectorize(text)
     classified = np.append(classified, vector.todense(), axis=0)
     best_paths = []
     if paths:
         indexes = np.array(list(paths.keys()))
-        sorted_indexes = np.linalg.norm(classified[indexes] - vector.toarray()[0], axis=1).argsort()
-        best = indexes[sorted_indexes[:5]]
+        best = cosine_similarity(classified[indexes], vector.toarray())[:, 0].argsort()[::-1][:n]
         best_paths = [paths[i] for i in best]
     return best_paths, len(paths)
 
@@ -51,6 +60,6 @@ def add_example(text, path):
     add_path(n, path)
 
 
-for directory, files_content in data.items():
+for directory, files_content in tqdm(data.items(), desc='Adding Directories'):
     for content in files_content:
         add_example(content, directory)
