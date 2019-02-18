@@ -1,7 +1,7 @@
 from flask import Flask, request
 from flask_cors import CORS
 from flask_restplus import Api, Resource, reqparse
-from classifier import find, add_path
+from services.classifier import find, add_path
 from services.convert_file_to_text import read_file
 
 
