@@ -32,7 +32,7 @@ def vectorize(text):
 def find(text):
     global classified
     vector = vectorize(text)
-    classified = np.append(classified, vector.todense())
+    classified = np.append(classified, vector.todense(), axis=0)
     best_paths = []
     if paths:
         indexes = np.array(list(paths.keys()))
