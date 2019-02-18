@@ -21,7 +21,7 @@ def train_vectorizer(training_documents):
 vectorizer = train_vectorizer(messages)
 print('training done')
 n_features = len(vectorizer.vocabulary_)
-classified = np.zeros((1000, n_features))
+classified = np.zeros((0, n_features))
 paths = dict()
 
 
@@ -30,8 +30,9 @@ def vectorize(text):
 
 
 def find(text):
+    global classified
     vector = vectorize(text)
-    classified[len(paths)] = vector.todense()
+    classified = np.append(classified, vector.todense())
     best_paths = []
     if paths:
         indexes = np.array(list(paths.keys()))
