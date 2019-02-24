@@ -10,6 +10,10 @@ from data.wikipedia_dataset import data as vocabulary_dataset
 from data.downloaded_pdf import data
 
 
+def n_closest(from_, compare_to, similarity, n):
+    return similarity(compare_to, from_)[:, 0].argsort()[::-1][:n]
+
+
 def preprocess(text: str) -> str:
     return re.sub(r'\d', 'D', text.lower())
 
@@ -38,9 +42,6 @@ class Model:
         return self.vectorizer.inverse_transform(self.vectorize(text))
 
 
-def n_closest(from_, compare_to, similarity, n):
-    return similarity(compare_to, from_)[:, 0].argsort()[::-1][:n]
-
 import pickle as pkl
 
 model = Model()
@@ -60,6 +61,7 @@ classified = np.zeros((0, n_features))
 paths = dict()
 
 annotations = pd.DataFrame(columns=['y_true', 'y_pred'] + list(feature_names))
+
 
 def restart():
     global classified, paths
