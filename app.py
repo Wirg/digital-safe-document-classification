@@ -1,9 +1,10 @@
 from flask import Flask, request
 from flask_cors import CORS
 from flask_restplus import Api, Resource, reqparse
-from services.classifier import find, add_path
+from services.classifier import find, add_path, setup_all
 from services.convert_file_to_text import read_file
 
+setup_all()
 
 def default_doc():
     return {

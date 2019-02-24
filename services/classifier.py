@@ -1,8 +1,6 @@
 import os
-import random as rd
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
-from sklearn.metrics import confusion_matrix
 from tqdm import tqdm
 import re
 import numpy as np
@@ -31,14 +29,17 @@ class Model:
         self.vectorizer = train_tf_idf(training_documents)
         return self.vectorizer
 
-    def vectorize(self, text):
-        return self.vectorizer.transform([text])
+    def vectorize(self, documents):
+        if isinstance(documents, str):
+            documents = [documents]
+        return self.vectorizer.transform(documents)
 
     def interpret(self, text):
         return self.vectorizer.inverse_transform(self.vectorize(text))
 
-    
 
+def n_closest(from_, compare_to, similarity, n):
+    return similarity(compare_to, from_)[:, 0].argsort()[::-1][:n]
 
 import pickle as pkl
 
@@ -76,7 +77,8 @@ def find(text, n=3):
     best_paths = []
     if paths:
         indexes = np.array(list(paths.keys()))
-        best = cosine_similarity(classified[indexes], vector.toarray())[:, 0].argsort()[::-1][:n]
+
+        best = n_closest(vector.toarray(), classified[indexes], cosine_similarity, n)
         best_paths = [paths[i] for i in best]
     return best_paths, len(paths)
 
@@ -90,70 +92,7 @@ def add_example(text, path):
     add_path(n, path)
 
 
-def measure_sucess(text, path):
-    best_paths, n = find(text)
-    add_path(n, path)
-    return best_paths
-
-
-from collections import Counter
-
-
 def setup_all():
     for directory, files_content in tqdm(data.items(), desc='Adding Directories'):
         for content in files_content:
             add_example(content, directory)
-
-
-def nested_data_to_vectors(data):
-    x, y = [], []
-    for directory, files_content in tqdm(data.items(), desc='Unnesting data'):
-        x.extend(files_content)
-        y.extend([directory] * len(files_content))
-    return np.array(x), np.array(y)
-
-
-def count_success(data):
-    c = Counter()
-    x, y = nested_data_to_vectors(data)
-    ind = np.arange(len(y))
-    confusion = []
-    for _ in tqdm(range(1), desc='running experiments'):
-        restart()
-        np.random.shuffle(ind)
-        for directory, files_content in data.items():
-            if files_content:
-                add_example(rd.choice(files_content), directory)
-
-        for i in ind:
-            best_paths = measure_sucess(x[i], y[i])
-            if not y[i] in best_paths:
-                print('*' * 55)
-                print(y[i])
-                print(best_paths)
-                print('=' * 10)
-                print(x[i][:800])
-                print('*' * 55)
-            confusion.append((y[i], y[i] if y[i] in best_paths else best_paths[0]))
-            c[y[i] in best_paths] += 1
-    return c, confusion
-
-
-if __name__ == '__main__':
-    import pandas as pd
-
-    pd.options.display.max_rows = 30
-    pd.options.display.max_columns = 30
-    pd.options.display.width = 600
-    c, v = count_success(data)
-    y_true, y_pred = zip(*v)
-    y_true, y_pred = np.array(y_true), np.array(y_pred)
-    labels = list(set(y_true))
-    cm = confusion_matrix(y_true, y_pred, labels=labels)
-    cm = pd.DataFrame(cm, index=labels, columns=labels)
-    print(c)
-    print(cm)
-    # cm['recall'] = cm.apply(lambda row: row[row.name] / row.sum(), axis=1)
-    print('hello')
-else:
-    setup_all()
