@@ -19,7 +19,6 @@ if not os.path.exists(CACHE):
 else:
     with open(CACHE, 'rb') as f:
         model = pkl.load(f)
-n_features = len(model.vectorizer.vocabulary_)
 print('training done')
 
 
@@ -34,13 +33,9 @@ def find(filename, text, user_id=3, n=3):
         return [], document_id
 
 
-def add_path(n, path):
-    change_document_folder(n, path)
-
-
 def add_example(filename, text, path):
     _, n = find(filename, text)
-    add_path(n, path)
+    change_document_folder(n, path)
 
 
 def setup_all():

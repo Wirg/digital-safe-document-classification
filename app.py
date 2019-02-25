@@ -1,10 +1,11 @@
 from flask import Flask, request
 from flask_cors import CORS
 from flask_restplus import Api, Resource, reqparse
-from services.classifier import find, add_path, setup_all
+from services.find_folder import find, change_document_folder, setup_all
 from services.convert_file_to_text import read_file
 
 setup_all()
+
 
 def default_doc():
     return {
@@ -41,7 +42,7 @@ class OurResource(Resource):
             return {'error': 'missing text'}, 503
         content = arguments['text']
 
-        paths, i = find(content)
+        paths, i = find('tmp', content)
         return {'input': content, 'paths': paths, 'id': i}, 200
 
 
@@ -53,10 +54,8 @@ class FileResource(Resource):
         file = request.files.get('file')
         if file is None:
             return {'error': 'missing file'}, 503
-
         content = read_file(file)
-
-        paths, i = find(content)
+        paths, i = find(file.filename, content)
         return {'input': content, 'paths': paths, 'id': i}, 200
 
 
@@ -78,5 +77,5 @@ class AddPath(Resource):
             return {'error': 'missing id'}, 503
         if path is None:
             return {'error': 'missing path'}, 503
-        add_path(id_, path)
+        change_document_folder(id_, path)
         return {'result': True}, 200
