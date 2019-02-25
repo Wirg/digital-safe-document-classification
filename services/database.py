@@ -70,8 +70,21 @@ def add_document(user_id, filename, content, vector, folder=None):
 
 def find_user_documents(user_id):
     with DataBaseCursor() as cur:
-        cur.execute('SELECT * FROM document WHERE userid=?', (user_id,))
+        cur.execute('SELECT folder, vector, name, content FROM document WHERE userid=?', (user_id,))
         return cur.fetchall()
+
+
+def find_user_folder_representation(user_id):
+    with DataBaseCursor() as cur:
+        cur.execute(
+            'SELECT folder, vector FROM document WHERE userid=? AND folder IS NOT NULL AND vector IS NOT NULL',
+            (user_id,)
+        )
+        user_data = cur.fetchall()
+    if not user_data:
+        raise ValueError(f'User {user_id} has not data yet')
+    folders, vectors = zip(*user_data)
+    return list(folders), np.concatenate(vectors)
 
 
 def change_document_folder(row_id, folder):
