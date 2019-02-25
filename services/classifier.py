@@ -8,7 +8,7 @@ def preprocess(text: str) -> str:
 
 
 def train_tf_idf(training_documents):
-    vectorizer = TfidfVectorizer(max_df=0.6, min_df=2, max_features=3000, preprocessor=preprocess)
+    vectorizer = TfidfVectorizer(max_df=0.6, min_df=4, max_features=3000, preprocessor=preprocess)
     vectorizer.fit_transform(tqdm(training_documents, desc='Fitting tf-idf'))
     return vectorizer
 
