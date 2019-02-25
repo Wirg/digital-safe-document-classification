@@ -50,13 +50,34 @@ class DataBaseCursor:
         self.close()
 
 
-with DataBaseCursor() as cur:
-    cur.execute('CREATE TABLE IF NOT EXISTS document (name VARCHAR, folder VARCHAR, content TEXT, vector array, userid INT, UNIQUE(name, folder, userid) ON CONFLICT REPLACE)')
+def create_table_document(filename='data/app.database.sqlite'):
+    with DataBaseCursor(filename) as cur:
+        cur.execute("""
+        CREATE TABLE IF NOT EXISTS document (
+        name VARCHAR, folder VARCHAR, content TEXT, vector array, userid INT,
+        UNIQUE(name, folder, userid) ON CONFLICT REPLACE
+        )""")
 
-with DataBaseCursor() as cur:
-    cur.execute('INSERT INTO document (name, folder, content, vector, userid) values (?, ?, ?, ?, ?)',
-                ("Aquile", "history", "My experiment description", np.random.rand(1, 250), 76))
 
-with DataBaseCursor() as cur:
-    cur.execute('SELECT * FROM document')
-    print(cur.fetchall())
+def add_document(user_id, filename, content, vector, folder=None):
+    with DataBaseCursor() as cur:
+        cur.execute(
+            'INSERT INTO document (name, folder, content, vector, userid) values (?, ?, ?, ?, ?)',
+            (filename, folder, content, vector, user_id)
+        )
+        return cur.lastrowid
+
+
+def find_user_documents(user_id):
+    with DataBaseCursor() as cur:
+        cur.execute('SELECT * FROM document WHERE userid=?', (user_id,))
+        return cur.fetchall()
+
+
+def change_document_folder(row_id, folder):
+    with DataBaseCursor() as cur:
+        cur.execute("""
+        UPDATE document
+        SET folder = ?
+        WHERE rowid = ?
+        """, (folder, row_id))
