@@ -1,14 +1,16 @@
 from sklearn.feature_extraction.text import TfidfVectorizer
 
 from tqdm import tqdm
+import pandas as pd
 import re
+
 
 def preprocess(text: str) -> str:
     return re.sub(r'\d', 'D', text.lower())
 
 
 def train_tf_idf(training_documents):
-    vectorizer = TfidfVectorizer(max_df=0.6, min_df=4, max_features=3000, preprocessor=preprocess)
+    vectorizer = TfidfVectorizer(max_df=0.6, min_df=2, max_features=3000, preprocessor=preprocess)
     vectorizer.fit_transform(tqdm(training_documents, desc='Fitting tf-idf'))
     return vectorizer
 
@@ -26,5 +28,5 @@ class Model:
             documents = [documents]
         return self.vectorizer.transform(documents)
 
-    def interpret(self, text):
-        return self.vectorizer.inverse_transform(self.vectorize(text))
+    def interpret(self, vector):
+        return pd.DataFrame(data=pd.np.array(vector), columns=self.vectorizer.get_feature_names())
