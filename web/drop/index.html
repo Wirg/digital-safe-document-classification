@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Drag and Drop File Uploader</title>
+    <title>Drag and Drop your files</title>
 
 
     <link rel="stylesheet" href="css/style.css">
@@ -15,8 +15,8 @@
 
 <div id="drop-area">
     <form class="my-form">
-        <p>Upload multiple files with the file dialog or by dragging and dropping images onto the dashed region</p>
-        <input type="file" id="fileElem" multiple accept="image/*,.md,.txt,.pdf,.csv"
+        <p>Drag and drop files in this area to find their perfect folder</p>
+        <input type="file" id="fileElem" multiple accept=".md,.txt,.pdf,.csv"
                onchange="handleFiles(this.files)">
         <label class="button" for="fileElem">Select some files</label>
     </form>
