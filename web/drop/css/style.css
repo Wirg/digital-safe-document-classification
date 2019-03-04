@@ -1,91 +1,103 @@
 body {
-  font-family: sans-serif;
+    font-family: sans-serif;
 }
+
 a {
-  color: #369;
+    color: #369;
 }
+
 #note {
-  width: 500px;
-  margin: 50px auto;
-  font-size: 1.1em;
-  color: #333;
-  text-align: justify;
+    width: 500px;
+    margin: 50px auto;
+    font-size: 1.1em;
+    color: #333;
+    text-align: justify;
 }
+
 #drop-area {
-  border: 2px solid #ccc;
-  border-radius: 5px;
-  width: 480px;
-  margin: 50px auto;
-  padding: 20px;
+    border: 2px solid #ccc;
+    border-radius: 5px;
+    width: 480px;
+    margin: 50px auto;
+    padding: 20px;
 }
+
 #drop-area.highlight {
-  border-color: purple;
+    border-color: purple;
 }
+
 p {
-  margin-top: 0;
+    margin-top: 0;
 }
+
 .my-form {
-  margin-bottom: 10px;
+    margin-bottom: 10px;
 }
+
 #gallery {
-  margin-top: 10px;
+    margin-top: 10px;
 }
+
 #gallery img {
-  width: 150px;
-  margin-bottom: 10px;
-  margin-right: 10px;
-  vertical-align: middle;
+    width: 150px;
+    margin-bottom: 10px;
+    margin-right: 10px;
+    vertical-align: middle;
 }
+
 .button {
-  display: inline-block;
-  padding: 10px;
-  background: #ccc;
-  cursor: pointer;
-  border-radius: 5px;
-  border: 1px solid #ccc;
+    display: inline-block;
+    padding: 10px;
+    background: #ccc;
+    cursor: pointer;
+    border-radius: 5px;
+    border: 1px solid #ccc;
 }
+
 .button:hover {
-  background: #ddd;
+    background: #ddd;
 }
+
 #fileElem {
-  display: none;
+    display: none;
 }
 
-/* The Modal (background) */
 .modal {
-  display: none; /* Hidden by default */
-  position: fixed; /* Stay in place */
-  z-index: 1; /* Sit on top */
-  padding-top: 100px; /* Location of the box */
-  left: 0;
-  top: 0;
-  width: 100%; /* Full width */
-  height: 100%; /* Full height */
-  overflow: auto; /* Enable scroll if needed */
-  background-color: rgb(0,0,0); /* Fallback color */
-  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    padding-top: 100px; /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0, 0, 0); /* Fallback color */
+    background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
 }
 
-/* Modal Content */
 .modal-content {
-  background-color: #fefefe;
-  margin: auto;
-  padding: 20px;
-  border: 1px solid #888;
-  width: 80%;
+    background-color: #fefefe;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 40%;
+    border-radius: 5px;
+    margin: 50px auto;
+    font-size: 1.1em;
+    color: #333;
+    text-align: justify;
 }
 
-/* The Close Button */
 .close {
-  color: #aaaaaa;
-  float: right;
-  font-size: 28px;
-  font-weight: bold;
+    color: #aaaaaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
 }
 
 .close:hover,
 .close:focus {
-  color: #000;
-  text-decoration: none;
-  cursor: pointer;
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
 }
