@@ -2,6 +2,8 @@ import sqlite3
 import io
 import numpy as np
 
+DEFAULT_DATABASE = 'data/app.database.sqlite'
+
 
 def array_to_sqlite_binary(array):
     stream = io.BytesIO()
@@ -21,7 +23,7 @@ sqlite3.register_converter("array", sqlite_binary_to_array)
 
 
 class DataBaseCursor:
-    def __init__(self, filename='data/app.database.sqlite'):
+    def __init__(self, filename=DEFAULT_DATABASE):
         self._filename = filename
         self._conn = None
         self._curs = None
@@ -50,8 +52,8 @@ class DataBaseCursor:
         self.close()
 
 
-def create_table_document(filename='data/app.database.sqlite'):
-    with DataBaseCursor(filename) as cur:
+def create_table_document(db_name=DEFAULT_DATABASE):
+    with DataBaseCursor(db_name) as cur:
         cur.execute("""
         CREATE TABLE IF NOT EXISTS document (
         name VARCHAR, folder VARCHAR, content TEXT, vector array, userid INT,
@@ -59,8 +61,8 @@ def create_table_document(filename='data/app.database.sqlite'):
         )""")
 
 
-def add_document(user_id, filename, content, vector, folder=None):
-    with DataBaseCursor() as cur:
+def add_document(user_id, filename, content, vector, folder=None, db_name=DEFAULT_DATABASE):
+    with DataBaseCursor(db_name) as cur:
         cur.execute(
             'INSERT INTO document (name, folder, content, vector, userid) values (?, ?, ?, ?, ?)',
             (filename, folder, content, vector, user_id)
@@ -68,14 +70,14 @@ def add_document(user_id, filename, content, vector, folder=None):
         return cur.lastrowid
 
 
-def find_user_documents(user_id):
-    with DataBaseCursor() as cur:
+def find_user_documents(user_id, db_name=DEFAULT_DATABASE):
+    with DataBaseCursor(db_name) as cur:
         cur.execute('SELECT folder, vector, name, content FROM document WHERE userid=?', (user_id,))
         return cur.fetchall()
 
 
-def find_user_folder_representation(user_id):
-    with DataBaseCursor() as cur:
+def find_user_folder_representation(user_id, db_name=DEFAULT_DATABASE):
+    with DataBaseCursor(db_name) as cur:
         cur.execute(
             'SELECT folder, vector FROM document WHERE userid=? AND folder IS NOT NULL AND vector IS NOT NULL',
             (user_id,)
@@ -87,8 +89,8 @@ def find_user_folder_representation(user_id):
     return list(folders), np.concatenate(vectors)
 
 
-def change_document_folder(row_id, folder):
-    with DataBaseCursor() as cur:
+def change_document_folder(row_id, folder, db_name=DEFAULT_DATABASE):
+    with DataBaseCursor(db_name) as cur:
         cur.execute("""
         UPDATE document
         SET folder = ?
