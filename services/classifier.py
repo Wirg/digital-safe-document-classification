@@ -1,12 +1,15 @@
 from sklearn.feature_extraction.text import TfidfVectorizer
 
 from tqdm import tqdm
+from nltk import SnowballStemmer
 import pandas as pd
 import re
 
+stemmer = SnowballStemmer('english')
+
 
 def preprocess(text: str) -> str:
-    return re.sub(r'\d', 'D', text.lower())
+    return re.sub(r'\b\d+\b', 'D', stemmer.stem(text.lower()))
 
 
 def train_tf_idf(training_documents):
