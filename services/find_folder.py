@@ -6,6 +6,7 @@ from services.classifier import Model
 from services.utils import n_closest
 from services.database import add_document, change_document_folder, find_user_folder_representation, create_table_document
 from data.wikipedia_dataset import data as vocabulary_dataset
+from data.text_telegram import messages
 from data.downloaded_pdf import data
 
 import pickle as pkl
@@ -13,7 +14,7 @@ import pickle as pkl
 CACHE = 'data/cached_model.pkl'
 if not os.path.exists(CACHE):
     model = Model()
-    model.train_vectorizer(vocabulary_dataset)
+    model.train_vectorizer(list(vocabulary_dataset.values()) + messages)
     with open(CACHE, 'wb') as f:
         pkl.dump(model, f)
 else:

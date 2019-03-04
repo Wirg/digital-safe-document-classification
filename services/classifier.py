@@ -20,6 +20,7 @@ class Model:
         self.vectorizer = None
 
     def train_vectorizer(self, training_documents):
+        print(f'Training vectorizer with {len(training_documents)} articles')
         self.vectorizer = train_tf_idf(training_documents)
         return self.vectorizer
 
