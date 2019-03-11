@@ -9,7 +9,7 @@ stemmer = SnowballStemmer('english')
 
 
 def preprocess(text: str) -> str:
-    return re.sub(r'\b\d+\b', 'D', stemmer.stem(text.lower()))
+    return re.sub(r'\b\d+\b', 'DIGITS', stemmer.stem(text.lower()))
 
 
 def train_tf_idf(training_documents):
@@ -31,6 +31,3 @@ class Model:
         if isinstance(documents, str):
             documents = [documents]
         return self.vectorizer.transform(documents)
-
-    def interpret(self, vector):
-        return pd.DataFrame(data=pd.np.array(vector), columns=self.vectorizer.get_feature_names())

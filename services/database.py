@@ -84,7 +84,7 @@ def find_user_folder_representation(user_id, db_name=DEFAULT_DATABASE):
         )
         user_data = cur.fetchall()
     if not user_data:
-        raise ValueError(f'User {user_id} has not data yet')
+        return [], []
     folders, vectors = zip(*user_data)
     return list(folders), np.concatenate(vectors)
 

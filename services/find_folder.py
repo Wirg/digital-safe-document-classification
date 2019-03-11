@@ -23,19 +23,18 @@ else:
 print('training done')
 
 
-def find(filename, text, user_id=3, n=3):
-    vector = model.vectorize(text).toarray()
-    document_id = add_document(user_id, filename, text, vector)
-    try:
-        paths, classified = find_user_folder_representation(user_id)
-        best = n_closest(vector, classified, cosine_similarity, n=n)
-        return [paths[i] for i in best], document_id
-    except ValueError:
+def find_folders(filename, uploaded_text_content, user_id=3, n=3):
+    uploaded_document_vector = model.vectorize(uploaded_text_content).toarray()
+    document_id = add_document(user_id, filename, uploaded_text_content, uploaded_document_vector)
+    folder_names, stored_document_vectors = find_user_folder_representation(user_id)
+    if not folder_names:
         return [], document_id
+    closest_documents = n_closest(uploaded_document_vector, stored_document_vectors, cosine_similarity, n=n)
+    return [folder_names[i] for i in closest_documents], document_id
 
 
 def add_file_to_folder(filename, text, path):
-    _, n = find(filename, text)
+    _, n = find_folders(filename, text)
     change_document_folder(n, path)
 
 
