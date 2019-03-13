@@ -1,7 +1,7 @@
 from flask import Flask, request
 from flask_cors import CORS
 from flask_restplus import Api, Resource, reqparse
-from services.find_folder import find, change_document_folder, setup_all
+from services.find_folder import find_folders, change_document_folder, setup_all, find_user_folder_representation, add_document
 from services.convert_file_to_text import read_file
 
 setup_all()
@@ -41,9 +41,10 @@ class OurResource(Resource):
         if arguments['text'] is None:
             return {'error': 'missing text'}, 503
         content = arguments['text']
-
-        paths, i = find('tmp', content)
-        return {'input': content, 'paths': paths, 'id': i}, 200
+        user_id = 3
+        folder_names, stored_document_vectors = find_user_folder_representation(user_id)
+        paths, vector = find_folders(content, folder_names, stored_document_vectors)
+        return {'input': content, 'paths': paths}, 200
 
 
 @api_ns.route('/file')
@@ -55,8 +56,11 @@ class FileResource(Resource):
         if file is None:
             return {'error': 'missing file'}, 503
         content = read_file(file)
-        paths, i = find(file.filename, content)
-        return {'input': content, 'paths': paths, 'id': i}, 200
+        user_id = 3
+        folder_names, stored_document_vectors = find_user_folder_representation(user_id)
+        paths, vector = find_folders(content, folder_names, stored_document_vectors)
+        document_id = add_document(user_id, file.filename, content, vector)
+        return {'input': content, 'paths': paths, 'id': document_id}, 200
 
 
 add_path_parser = reqparse.RequestParser()

@@ -23,19 +23,20 @@ else:
 print('training done')
 
 
-def find_folders(filename, uploaded_text_content, user_id=3, n=3):
+def find_folders(uploaded_text_content, folder_names, stored_document_vectors, n=3):
     uploaded_document_vector = model.vectorize(uploaded_text_content).toarray()
-    document_id = add_document(user_id, filename, uploaded_text_content, uploaded_document_vector)
+    if folder_names:
+        closest_documents = n_closest(uploaded_document_vector, stored_document_vectors, cosine_similarity, n=n)
+    else:
+        closest_documents = []
+    return [folder_names[i] for i in closest_documents], uploaded_document_vector
+
+
+def add_file_to_folder(filename, text, path, user_id=3):
     folder_names, stored_document_vectors = find_user_folder_representation(user_id)
-    if not folder_names:
-        return [], document_id
-    closest_documents = n_closest(uploaded_document_vector, stored_document_vectors, cosine_similarity, n=n)
-    return [folder_names[i] for i in closest_documents], document_id
-
-
-def add_file_to_folder(filename, text, path):
-    _, n = find_folders(filename, text)
-    change_document_folder(n, path)
+    _, vector = find_folders(text, folder_names, stored_document_vectors)
+    document_id = add_document(user_id, filename, text, vector)
+    change_document_folder(document_id, path)
 
 
 def setup_all():
